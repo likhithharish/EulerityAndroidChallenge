@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">EulerityAndroidChallenge</string>
+    <string name="image_url">https://eulerity-hackathon.appspot.com/image/</string>
+    <string name="upload_url">https://eulerity-hackathon.appspot.com/upload/</string>
+    <string name="base_url">https://eulerity-hackathon.appspot.com/</string>
+    <string name="app_id">likhithharish.anumukonda@stonybrook.edu</string>
+</resources>
