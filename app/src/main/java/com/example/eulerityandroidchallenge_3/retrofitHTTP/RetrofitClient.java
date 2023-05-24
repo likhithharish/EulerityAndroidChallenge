@@ -2,7 +2,7 @@ package com.example.eulerityandroidchallenge_3.retrofitHTTP;
 
 
 import android.util.Log;
-
+import android.content.Context;
 import com.example.eulerityandroidchallenge_3.EditImageActivity;
 
 import retrofit2.Retrofit;

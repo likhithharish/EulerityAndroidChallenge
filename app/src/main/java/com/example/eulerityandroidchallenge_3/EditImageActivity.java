@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.content.Context;
 import android.content.res.Resources;
@@ -54,6 +55,7 @@ public class EditImageActivity extends AppCompatActivity {
     private Button doneButton;
 
     private Button cropButton;
+    private ProgressBar progressBar;
 
     private String imageUrl;
 
@@ -78,9 +80,10 @@ public class EditImageActivity extends AppCompatActivity {
         grayscaleButton = findViewById(R.id.convert_to_grayscale_button);
         cropButton = findViewById(R.id.crop_button);
         doneButton = findViewById(R.id.done_button);
+        progressBar = findViewById(R.id.progress_bar);
 
         // Get the image URL from the intent
-        imageUrl = getIntent().getStringExtra("imageUrl");
+        imageUrl = getIntent().getStringExtra(resources.getString(R.string.img_url_resp));
 
         // Display the image using Picasso
         Picasso.get().load(imageUrl)
@@ -93,9 +96,9 @@ public class EditImageActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Create and show a dialog to allow the user to enter the text
                 AlertDialog.Builder builder = new AlertDialog.Builder(EditImageActivity.this);
-                builder.setTitle("Add Text");
+                builder.setTitle(resources.getString(R.string.add_text));
                 final EditText editText = new EditText(EditImageActivity.this);
-                editText.setHint("Enter text");
+                editText.setHint(resources.getString(R.string.enter_text));
                 builder.setView(editText);
                 builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
                     @Override
@@ -130,10 +133,6 @@ public class EditImageActivity extends AppCompatActivity {
 
     }
 
-
-
-
-
     private Bitmap toGrayscale(Bitmap bitmap) {
         Bitmap grayscaleBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(grayscaleBitmap);
@@ -145,8 +144,6 @@ public class EditImageActivity extends AppCompatActivity {
         canvas.drawBitmap(bitmap, 0, 0, paint);
         return grayscaleBitmap;
     }
-
-
 
     private void addTextToImage(String text) {
         Bitmap imageBitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
@@ -174,6 +171,7 @@ public class EditImageActivity extends AppCompatActivity {
         BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
         Bitmap editedBitmap = drawable.getBitmap();
 
+        progressBar.setVisibility(View.VISIBLE);
         // Save the edited image locally
         String savedImagePath = saveImageLocally(editedBitmap);
         editedImageUrl = "file://" + savedImagePath;
@@ -213,10 +211,12 @@ public class EditImageActivity extends AppCompatActivity {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     // Image upload successful
-                    Toast.makeText(EditImageActivity.this, "Image Uploaded Successfully :)", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
+                    Toast.makeText(EditImageActivity.this, resources.getString(R.string.upload_success), Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
-                    Toast.makeText(EditImageActivity.this, "Image Upload Failed :(", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
+                    Toast.makeText(EditImageActivity.this, resources.getString(R.string.upload_failure), Toast.LENGTH_SHORT).show();
                     // Handle unsuccessful response
                 }
             }
@@ -231,7 +231,7 @@ public class EditImageActivity extends AppCompatActivity {
 
     private String saveImageLocally(Bitmap bitmap) {
         String savedImagePath = null;
-        String imageFileName = "edited_image.jpg";
+        String imageFileName = resources.getString(R.string.edited_file);
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
 
         try {
